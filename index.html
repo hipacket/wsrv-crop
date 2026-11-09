@@ -3,56 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cài bookmark Crop ảnh (wsrv JPG)</title>
+<title>Crop ảnh → URL wsrv.nl</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
 <style>
   *{box-sizing:border-box}
   body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:#f4f5f7;color:#111}
-  .wrap{max-width:600px;margin:0 auto;padding:24px 14px 40px}
-  h1{font-size:20px;margin:4px 0 10px}
-  p,li{font-size:15px;line-height:1.65}
-  .bm{display:block;text-align:center;background:#4f46e5;color:#fff;font-weight:700;font-size:17px;
-      padding:16px;border-radius:12px;text-decoration:none;margin:16px 0;cursor:grab;box-shadow:0 4px 14px rgba(79,70,229,.35)}
-  .bm:active{cursor:grabbing}
-  .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin:14px 0}
-  textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;
-      padding:10px;border:1.5px solid #d4d4d8;border-radius:10px;word-break:break-all}
-  button{cursor:pointer;border:none;border-radius:9px;padding:9px 16px;font-size:14px;font-weight:600;background:#111827;color:#fff;margin-top:8px}
-  .note{color:#6b7280;font-size:13.5px}
-  ol{margin:6px 0;padding-left:20px}
+  .wrap{max-width:600px;margin:0 auto;padding:20px 14px 36px}
+  h1{font-size:20px;margin:4px 0 14px}
+  .row{display:flex;gap:8px}
+  .row input[type=url]{flex:1;padding:11px 12px;border:1.5px solid #d4d4d8;border-radius:10px;font-size:15px;min-width:0}
+  .row input[type=url]:focus{outline:none;border-color:#4f46e5}
+  button{cursor:pointer;border:none;border-radius:10px;padding:11px 18px;font-size:15px;font-weight:600;background:#4f46e5;color:#fff}
+  button:hover{opacity:.92}
+  button.copy{background:#111827;width:100%;margin-top:8px}
+  #status{font-size:13.5px;margin:10px 0;min-height:18px;color:#555}
+  #status.err{color:#dc2626}
+  #status.ok{color:#059669}
+  .editor{background:#111827;border-radius:12px;min-height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .editor img{max-width:100%;display:block}
+  .editor .ph{color:#9ca3af;font-size:14px;padding:60px 10px;text-align:center}
+  .bar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:14px 0 6px;font-size:14.5px}
+  .bar select{padding:9px 10px;border:1.5px solid #d4d4d8;border-radius:9px;font-size:14.5px;background:#fff}
+  .bar label{display:flex;gap:6px;align-items:center;cursor:pointer}
+  .bar input[type=checkbox]{width:17px;height:17px;accent-color:#4f46e5}
+  textarea{width:100%;min-height:76px;padding:11px;border:1.5px solid #4f46e5;border-radius:10px;background:#eef2ff;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.55;word-break:break-all;resize:vertical}
+  .bmbar{background:#eef2ff;border:1px dashed #4f46e5;border-radius:10px;padding:10px 12px;font-size:13.5px;margin:0 0 14px;line-height:1.6}
+  .bmbtn{display:inline-block;background:#4f46e5;color:#fff;font-weight:700;padding:5px 14px;border-radius:999px;text-decoration:none;cursor:grab;margin-left:6px}
+  .lbl{font-size:13px;font-weight:700;color:#374151;margin:14px 0 6px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>✂️ Bookmark Crop ảnh → wsrv JPG</h1>
-  <p>Không cần mở trang riêng nữa. Cài một lần vào Chrome, sau đó đang xem ảnh ở bất cứ đâu, bấm bookmark là crop luôn, xong tab tự chuyển sang <b>URL ảnh đã crop</b> (định dạng JPG) ngay trên thanh địa chỉ.</p>
+  <h1>✂️ Crop ảnh → URL wsrv.nl</h1>
 
-  <div class="card">
-    <b>Cài đặt (kéo thả):</b>
-    <ol>
-      <li>Bật thanh bookmark của Chrome: <b>Ctrl + Shift + B</b></li>
-      <li>Kéo nút tím dưới đây thả lên thanh bookmark:</li>
-    </ol>
-    <a class="bm" href="javascript:(function%20()%20%7B%20if%20(window.__wsrvCropOn)%20return%3B%20window.__wsrvCropOn%20%3D%201%3B%20var%20imgs%20%3D%20Array.prototype.slice.call(document.images).filter(function%20(i)%20%7B%20return%20i.naturalWidth%20%3E%3D%2050%20%26%26%20i.naturalHeight%20%3E%3D%2050%3B%20%7D)%3B%20var%20isImgDoc%20%3D%20(document.contentType%20%7C%7C%20%22%22).indexOf(%22image%2F%22)%20%3D%3D%3D%200%3B%20function%20pick()%20%7B%20var%20tip%20%3D%20document.createElement(%22div%22)%3B%20tip.textContent%20%3D%20%22B%E1%BA%A5m%20v%C3%A0o%20%E1%BA%A3nh%20mu%E1%BB%91n%20crop%22%3B%20tip.style.cssText%20%3D%20%22position%3Afixed%3Btop%3A12px%3Bleft%3A50%25%3Btransform%3AtranslateX(-50%25)%3Bbackground%3A%23111827%3Bcolor%3A%23fff%3Bpadding%3A10px%2018px%3Bborder-radius%3A999px%3Bz-index%3A2147483647%3Bfont%3A14px%20system-ui%2Csans-serif%22%3B%20document.body.appendChild(tip)%3B%20function%20h(e)%20%7B%20var%20t%20%3D%20e.target%3B%20if%20(t%20%26%26%20t.tagName%20%3D%3D%3D%20%22IMG%22)%20%7B%20e.preventDefault()%3B%20e.stopPropagation()%3B%20document.removeEventListener(%22click%22%2C%20h%2C%20true)%3B%20tip.remove()%3B%20start(t)%3B%20%7D%20%7D%20document.addEventListener(%22click%22%2C%20h%2C%20true)%3B%20%7D%20function%20start(img)%20%7B%20var%20src%20%3D%20isImgDoc%20%3F%20location.href%20%3A%20(img.currentSrc%20%7C%7C%20img.src)%3B%20var%20css%20%3D%20document.createElement(%22link%22)%3B%20css.rel%20%3D%20%22stylesheet%22%3B%20css.href%20%3D%20%22https%3A%2F%2Fcdnjs.cloudflare.com%2Fajax%2Flibs%2Fcropperjs%2F1.6.2%2Fcropper.min.css%22%3B%20document.head.appendChild(css)%3B%20var%20sc%20%3D%20document.createElement(%22script%22)%3B%20sc.src%20%3D%20%22https%3A%2F%2Fcdnjs.cloudflare.com%2Fajax%2Flibs%2Fcropperjs%2F1.6.2%2Fcropper.min.js%22%3B%20sc.onerror%20%3D%20function%20()%20%7B%20window.__wsrvCropOn%20%3D%200%3B%20alert(%22Kh%C3%B4ng%20t%E1%BA%A3i%20%C4%91%C6%B0%E1%BB%A3c%20th%C6%B0%20vi%E1%BB%87n%20crop%20(c%E1%BA%A7n%20internet%2C%20ho%E1%BA%B7c%20trang%20n%C3%A0y%20ch%E1%BA%B7n%20script%20ngo%C3%A0i).%22)%3B%20%7D%3B%20sc.onload%20%3D%20function%20()%20%7B%20ui(src)%3B%20%7D%3B%20document.head.appendChild(sc)%3B%20%7D%20function%20ui(src)%20%7B%20var%20ov%20%3D%20document.createElement(%22div%22)%3B%20ov.style.cssText%20%3D%20%22position%3Afixed%3Binset%3A0%3Bbackground%3Argba(8%2C8%2C12%2C.94)%3Bz-index%3A2147483646%3Bdisplay%3Aflex%3Bflex-direction%3Acolumn%3Balign-items%3Acenter%3Bpadding%3A12px%3Bbox-sizing%3Aborder-box%3Bfont-family%3Asystem-ui%2Csans-serif%22%3B%20var%20stage%20%3D%20document.createElement(%22div%22)%3B%20stage.style.cssText%20%3D%20%22flex%3A1%3Bwidth%3A100%25%3Bmax-width%3A860px%3Bmin-height%3A0%3Bdisplay%3Aflex%3Balign-items%3Acenter%3Bjustify-content%3Acenter%3Boverflow%3Ahidden%22%3B%20var%20im%20%3D%20document.createElement(%22img%22)%3B%20im.src%20%3D%20src%3B%20im.style.cssText%20%3D%20%22max-width%3A100%25%3Bdisplay%3Ablock%22%3B%20stage.appendChild(im)%3B%20ov.appendChild(stage)%3B%20var%20bar%20%3D%20document.createElement(%22div%22)%3B%20bar.style.cssText%20%3D%20%22padding%3A12px%200%202px%3Bdisplay%3Aflex%3Bgap%3A10px%22%3B%20var%20ok%20%3D%20document.createElement(%22button%22)%3B%20ok.textContent%20%3D%20%22%E2%9C%94%20Xong%20%E2%80%94%20m%E1%BB%9F%20%E1%BA%A3nh%20%C4%91%C3%A3%20crop%22%3B%20ok.disabled%20%3D%20true%3B%20ok.style.opacity%20%3D%20%22.5%22%3B%20ok.style.cssText%20%3D%20%22background%3A%234f46e5%3Bcolor%3A%23fff%3Bborder%3A0%3Bborder-radius%3A10px%3Bpadding%3A11px%2018px%3Bfont-size%3A15px%3Bfont-weight%3A600%3Bcursor%3Apointer%22%3B%20var%20cancel%20%3D%20document.createElement(%22button%22)%3B%20cancel.textContent%20%3D%20%22%E2%9C%96%20Hu%E1%BB%B7%22%3B%20cancel.style.cssText%20%3D%20%22background%3A%23374151%3Bcolor%3A%23fff%3Bborder%3A0%3Bborder-radius%3A10px%3Bpadding%3A11px%2018px%3Bfont-size%3A15px%3Bfont-weight%3A600%3Bcursor%3Apointer%22%3B%20bar.appendChild(ok)%3B%20bar.appendChild(cancel)%3B%20ov.appendChild(bar)%3B%20document.body.appendChild(ov)%3B%20var%20cr%20%3D%20null%3B%20function%20init()%20%7B%20cr%20%3D%20new%20Cropper(im%2C%20%7B%20aspectRatio%3A%20NaN%2C%20viewMode%3A%201%2C%20autoCropArea%3A%200.8%2C%20zoomable%3A%20false%2C%20zoomOnWheel%3A%20false%2C%20zoomOnTouch%3A%20false%2C%20movable%3A%20false%2C%20ready%3A%20function%20()%20%7B%20var%20W%20%3D%20im.naturalWidth%2C%20H%20%3D%20im.naturalHeight%2C%20side%20%3D%20Math.round(Math.min(W%2C%20H)%20*%200.8)%3B%20var%20tries%20%3D%200%3B%20(function%20apply()%20%7B%20if%20(cr)%20%7B%20cr.setData(%7B%20x%3A%20Math.round((W%20-%20side)%20%2F%202)%2C%20y%3A%20Math.round((H%20-%20side)%20%2F%202)%2C%20width%3A%20side%2C%20height%3A%20side%20%7D)%3B%20ok.disabled%20%3D%20false%3B%20ok.style.opacity%20%3D%20%221%22%3B%20%7D%20else%20if%20(tries%2B%2B%20%3C%2020)%20setTimeout(apply%2C%20100)%3B%20%7D)()%3B%20%7D%20%7D)%3B%20%7D%20if%20(im.complete%20%26%26%20im.naturalWidth%20%3E%200)%20init()%3B%20else%20im.onload%20%3D%20init%3B%20ok.onclick%20%3D%20function%20()%20%7B%20if%20(!cr)%20return%3B%20var%20d%20%3D%20cr.getData()%3B%20location.href%20%3D%20%22https%3A%2F%2Fwsrv.nl%2F%3Furl%3D%22%20%2B%20encodeURIComponent(src)%20%2B%20%22%26cx%3D%22%20%2B%20Math.max(0%2C%20Math.round(d.x))%20%2B%20%22%26cy%3D%22%20%2B%20Math.max(0%2C%20Math.round(d.y))%20%2B%20%22%26cw%3D%22%20%2B%20Math.round(d.width)%20%2B%20%22%26ch%3D%22%20%2B%20Math.round(d.height)%20%2B%20%22%26precrop%26output%3Djpg%22%3B%20%7D%3B%20cancel.onclick%20%3D%20function%20()%20%7B%20ov.remove()%3B%20window.__wsrvCropOn%20%3D%200%3B%20%7D%3B%20%7D%20if%20(isImgDoc%20%26%26%20imgs.length)%20start(imgs%5B0%5D)%3B%20else%20if%20(imgs.length%20%3D%3D%3D%201)%20start(imgs%5B0%5D)%3B%20else%20if%20(imgs.length%20%3E%201)%20pick()%3B%20else%20alert(%22Trang%20n%C3%A0y%20kh%C3%B4ng%20th%E1%BA%A5y%20%E1%BA%A3nh%20n%C3%A0o.%22)%3B%20%7D)()" onclick="alert('Đừng bấm ở đây — hãy KÉO nút này lên thanh bookmark ở trên cùng của Chrome.');return false;">✂️ Crop wsrv</a>
+  <div class="bmbar">🚀 Dùng nhanh trên mọi trang: kéo nút này lên thanh bookmark của Chrome (bật thanh bằng Ctrl+Shift+B), sau này đang xem ảnh chỉ cần bấm nút là crop:<a class="bmbtn" href="javascript:(function%20()%20%7B%20if%20(window.__wsrvCropOn)%20return%3B%20window.__wsrvCropOn%20%3D%201%3B%20var%20imgs%20%3D%20Array.prototype.slice.call(document.images).filter(function%20(i)%20%7B%20return%20i.naturalWidth%20%3E%3D%2050%20%26%26%20i.naturalHeight%20%3E%3D%2050%3B%20%7D)%3B%20var%20isImgDoc%20%3D%20(document.contentType%20%7C%7C%20%22%22).indexOf(%22image%2F%22)%20%3D%3D%3D%200%3B%20function%20pick()%20%7B%20var%20tip%20%3D%20document.createElement(%22div%22)%3B%20tip.textContent%20%3D%20%22B%E1%BA%A5m%20v%C3%A0o%20%E1%BA%A3nh%20mu%E1%BB%91n%20crop%22%3B%20tip.style.cssText%20%3D%20%22position%3Afixed%3Btop%3A12px%3Bleft%3A50%25%3Btransform%3AtranslateX(-50%25)%3Bbackground%3A%23111827%3Bcolor%3A%23fff%3Bpadding%3A10px%2018px%3Bborder-radius%3A999px%3Bz-index%3A2147483647%3Bfont%3A14px%20system-ui%2Csans-serif%22%3B%20document.body.appendChild(tip)%3B%20function%20h(e)%20%7B%20var%20t%20%3D%20e.target%3B%20if%20(t%20%26%26%20t.tagName%20%3D%3D%3D%20%22IMG%22)%20%7B%20e.preventDefault()%3B%20e.stopPropagation()%3B%20document.removeEventListener(%22click%22%2C%20h%2C%20true)%3B%20tip.remove()%3B%20start(t)%3B%20%7D%20%7D%20document.addEventListener(%22click%22%2C%20h%2C%20true)%3B%20%7D%20function%20start(img)%20%7B%20var%20src%20%3D%20isImgDoc%20%3F%20location.href%20%3A%20(img.currentSrc%20%7C%7C%20img.src)%3B%20var%20css%20%3D%20document.createElement(%22link%22)%3B%20css.rel%20%3D%20%22stylesheet%22%3B%20css.href%20%3D%20%22https%3A%2F%2Fcdnjs.cloudflare.com%2Fajax%2Flibs%2Fcropperjs%2F1.6.2%2Fcropper.min.css%22%3B%20document.head.appendChild(css)%3B%20var%20sc%20%3D%20document.createElement(%22script%22)%3B%20sc.src%20%3D%20%22https%3A%2F%2Fcdnjs.cloudflare.com%2Fajax%2Flibs%2Fcropperjs%2F1.6.2%2Fcropper.min.js%22%3B%20sc.onerror%20%3D%20function%20()%20%7B%20window.__wsrvCropOn%20%3D%200%3B%20alert(%22Kh%C3%B4ng%20t%E1%BA%A3i%20%C4%91%C6%B0%E1%BB%A3c%20th%C6%B0%20vi%E1%BB%87n%20crop%20(c%E1%BA%A7n%20internet%2C%20ho%E1%BA%B7c%20trang%20n%C3%A0y%20ch%E1%BA%B7n%20script%20ngo%C3%A0i).%22)%3B%20%7D%3B%20sc.onload%20%3D%20function%20()%20%7B%20ui(src)%3B%20%7D%3B%20document.head.appendChild(sc)%3B%20%7D%20function%20ui(src)%20%7B%20var%20ov%20%3D%20document.createElement(%22div%22)%3B%20ov.style.cssText%20%3D%20%22position%3Afixed%3Binset%3A0%3Bbackground%3Argba(8%2C8%2C12%2C.94)%3Bz-index%3A2147483646%3Bdisplay%3Aflex%3Bflex-direction%3Acolumn%3Balign-items%3Acenter%3Bpadding%3A12px%3Bbox-sizing%3Aborder-box%3Bfont-family%3Asystem-ui%2Csans-serif%22%3B%20var%20stage%20%3D%20document.createElement(%22div%22)%3B%20stage.style.cssText%20%3D%20%22flex%3A1%3Bwidth%3A100%25%3Bmax-width%3A860px%3Bmin-height%3A0%3Bdisplay%3Aflex%3Balign-items%3Acenter%3Bjustify-content%3Acenter%3Boverflow%3Ahidden%22%3B%20var%20im%20%3D%20document.createElement(%22img%22)%3B%20im.src%20%3D%20src%3B%20im.style.cssText%20%3D%20%22max-width%3A100%25%3Bdisplay%3Ablock%22%3B%20stage.appendChild(im)%3B%20ov.appendChild(stage)%3B%20var%20bar%20%3D%20document.createElement(%22div%22)%3B%20bar.style.cssText%20%3D%20%22padding%3A12px%200%202px%3Bdisplay%3Aflex%3Bgap%3A10px%22%3B%20var%20ok%20%3D%20document.createElement(%22button%22)%3B%20ok.textContent%20%3D%20%22%E2%9C%94%20Xong%20%E2%80%94%20m%E1%BB%9F%20%E1%BA%A3nh%20%C4%91%C3%A3%20crop%22%3B%20ok.disabled%20%3D%20true%3B%20ok.style.opacity%20%3D%20%22.5%22%3B%20ok.style.cssText%20%3D%20%22background%3A%234f46e5%3Bcolor%3A%23fff%3Bborder%3A0%3Bborder-radius%3A10px%3Bpadding%3A11px%2018px%3Bfont-size%3A15px%3Bfont-weight%3A600%3Bcursor%3Apointer%22%3B%20var%20cancel%20%3D%20document.createElement(%22button%22)%3B%20cancel.textContent%20%3D%20%22%E2%9C%96%20Hu%E1%BB%B7%22%3B%20cancel.style.cssText%20%3D%20%22background%3A%23374151%3Bcolor%3A%23fff%3Bborder%3A0%3Bborder-radius%3A10px%3Bpadding%3A11px%2018px%3Bfont-size%3A15px%3Bfont-weight%3A600%3Bcursor%3Apointer%22%3B%20bar.appendChild(ok)%3B%20bar.appendChild(cancel)%3B%20ov.appendChild(bar)%3B%20document.body.appendChild(ov)%3B%20var%20cr%20%3D%20null%3B%20function%20init()%20%7B%20cr%20%3D%20new%20Cropper(im%2C%20%7B%20aspectRatio%3A%20NaN%2C%20viewMode%3A%201%2C%20autoCropArea%3A%200.8%2C%20background%3A%20false%2C%20zoomable%3A%20false%2C%20zoomOnWheel%3A%20false%2C%20zoomOnTouch%3A%20false%2C%20movable%3A%20false%2C%20ready%3A%20function%20()%20%7B%20var%20W%20%3D%20im.naturalWidth%2C%20H%20%3D%20im.naturalHeight%2C%20side%20%3D%20Math.round(Math.min(W%2C%20H)%20*%200.8)%3B%20var%20tries%20%3D%200%3B%20(function%20apply()%20%7B%20if%20(cr)%20%7B%20cr.setData(%7B%20x%3A%20Math.round((W%20-%20side)%20%2F%202)%2C%20y%3A%20Math.round((H%20-%20side)%20%2F%202)%2C%20width%3A%20side%2C%20height%3A%20side%20%7D)%3B%20ok.disabled%20%3D%20false%3B%20ok.style.opacity%20%3D%20%221%22%3B%20%7D%20else%20if%20(tries%2B%2B%20%3C%2020)%20setTimeout(apply%2C%20100)%3B%20%7D)()%3B%20%7D%20%7D)%3B%20%7D%20if%20(im.complete%20%26%26%20im.naturalWidth%20%3E%200)%20init()%3B%20else%20im.onload%20%3D%20init%3B%20ok.onclick%20%3D%20function%20()%20%7B%20if%20(!cr)%20return%3B%20var%20d%20%3D%20cr.getData()%3B%20location.href%20%3D%20%22https%3A%2F%2Fwsrv.nl%2F%3Furl%3D%22%20%2B%20encodeURIComponent(src)%20%2B%20%22%26cx%3D%22%20%2B%20Math.max(0%2C%20Math.round(d.x))%20%2B%20%22%26cy%3D%22%20%2B%20Math.max(0%2C%20Math.round(d.y))%20%2B%20%22%26cw%3D%22%20%2B%20Math.round(d.width)%20%2B%20%22%26ch%3D%22%20%2B%20Math.round(d.height)%20%2B%20%22%26precrop%26output%3Djpg%22%3B%20%7D%3B%20cancel.onclick%20%3D%20function%20()%20%7B%20ov.remove()%3B%20window.__wsrvCropOn%20%3D%200%3B%20%7D%3B%20%7D%20if%20(isImgDoc%20%26%26%20imgs.length)%20start(imgs%5B0%5D)%3B%20else%20if%20(imgs.length%20%3D%3D%3D%201)%20start(imgs%5B0%5D)%3B%20else%20if%20(imgs.length%20%3E%201)%20pick()%3B%20else%20alert(%22Trang%20n%C3%A0y%20kh%C3%B4ng%20th%E1%BA%A5y%20%E1%BA%A3nh%20n%C3%A0o.%22)%3B%20%7D)()" onclick="alert('Đừng bấm ở đây — hãy KÉO nút này lên thanh bookmark của Chrome.');return false;">✂️ Crop wsrv</a></div>
+
+  <div class="row">
+    <input type="url" id="url" placeholder="Dán URL ảnh vào đây…" spellcheck="false">
+    <button id="load">Tải ảnh</button>
+  </div>
+  <div id="status"></div>
+
+  <div class="editor" id="box">
+    <div class="ph" id="ph">Chưa có ảnh</div>
+    <img id="img" alt="" style="display:none">
   </div>
 
-  <div class="card">
-    <b>Cách dùng:</b>
-    <ol>
-      <li>Mở một ảnh bất kỳ (mở ảnh ở tab riêng, hoặc đang ở trang web có ảnh cũng được — trang nhiều ảnh thì bookmark sẽ bảo bạn bấm chọn ảnh cần crop)</li>
-      <li>Bấm bookmark <b>✂️ Crop wsrv</b> trên thanh bookmark</li>
-      <li>Kéo khung crop (mở đầu là hình vuông 1:1, kéo góc chỉnh tự do), bấm <b>✔ Xong</b></li>
-      <li>Tab chuyển sang ảnh đã crop, URL trên thanh địa chỉ chính là URL wsrv để copy dùng tiếp</li>
-    </ol>
+  <div class="bar">
+    <span>Định dạng file đầu ra:
+      <select id="fmt">
+        <option value="png">PNG</option>
+        <option value="jpg" selected>JPG</option>
+        <option value="webp">WebP</option>
+        <option value="avif">AVIF</option>
+        <option value="gif">GIF</option>
+      </select>
+    </span>
   </div>
 
-  <div class="card">
-    <b>Cài tay (nếu kéo thả không được):</b>
-    <p>Copy đoạn mã dưới đây → chuột phải vào thanh bookmark → <b>Thêm trang…</b> → Tên: <i>Crop wsrv</i>, ô URL: dán đoạn mã vào → Lưu.</p>
-    <textarea id="code" readonly>javascript:(function%20()%20%7B%20if%20(window.__wsrvCropOn)%20return%3B%20window.__wsrvCropOn%20%3D%201%3B%20var%20imgs%20%3D%20Array.prototype.slice.call(document.images).filter(function%20(i)%20%7B%20return%20i.naturalWidth%20%3E%3D%2050%20%26%26%20i.naturalHeight%20%3E%3D%2050%3B%20%7D)%3B%20var%20isImgDoc%20%3D%20(document.contentType%20%7C%7C%20%22%22).indexOf(%22image%2F%22)%20%3D%3D%3D%200%3B%20function%20pick()%20%7B%20var%20tip%20%3D%20document.createElement(%22div%22)%3B%20tip.textContent%20%3D%20%22B%E1%BA%A5m%20v%C3%A0o%20%E1%BA%A3nh%20mu%E1%BB%91n%20crop%22%3B%20tip.style.cssText%20%3D%20%22position%3Afixed%3Btop%3A12px%3Bleft%3A50%25%3Btransform%3AtranslateX(-50%25)%3Bbackground%3A%23111827%3Bcolor%3A%23fff%3Bpadding%3A10px%2018px%3Bborder-radius%3A999px%3Bz-index%3A2147483647%3Bfont%3A14px%20system-ui%2Csans-serif%22%3B%20document.body.appendChild(tip)%3B%20function%20h(e)%20%7B%20var%20t%20%3D%20e.target%3B%20if%20(t%20%26%26%20t.tagName%20%3D%3D%3D%20%22IMG%22)%20%7B%20e.preventDefault()%3B%20e.stopPropagation()%3B%20document.removeEventListener(%22click%22%2C%20h%2C%20true)%3B%20tip.remove()%3B%20start(t)%3B%20%7D%20%7D%20document.addEventListener(%22click%22%2C%20h%2C%20true)%3B%20%7D%20function%20start(img)%20%7B%20var%20src%20%3D%20isImgDoc%20%3F%20location.href%20%3A%20(img.currentSrc%20%7C%7C%20img.src)%3B%20var%20css%20%3D%20document.createElement(%22link%22)%3B%20css.rel%20%3D%20%22stylesheet%22%3B%20css.href%20%3D%20%22https%3A%2F%2Fcdnjs.cloudflare.com%2Fajax%2Flibs%2Fcropperjs%2F1.6.2%2Fcropper.min.css%22%3B%20document.head.appendChild(css)%3B%20var%20sc%20%3D%20document.createElement(%22script%22)%3B%20sc.src%20%3D%20%22https%3A%2F%2Fcdnjs.cloudflare.com%2Fajax%2Flibs%2Fcropperjs%2F1.6.2%2Fcropper.min.js%22%3B%20sc.onerror%20%3D%20function%20()%20%7B%20window.__wsrvCropOn%20%3D%200%3B%20alert(%22Kh%C3%B4ng%20t%E1%BA%A3i%20%C4%91%C6%B0%E1%BB%A3c%20th%C6%B0%20vi%E1%BB%87n%20crop%20(c%E1%BA%A7n%20internet%2C%20ho%E1%BA%B7c%20trang%20n%C3%A0y%20ch%E1%BA%B7n%20script%20ngo%C3%A0i).%22)%3B%20%7D%3B%20sc.onload%20%3D%20function%20()%20%7B%20ui(src)%3B%20%7D%3B%20document.head.appendChild(sc)%3B%20%7D%20function%20ui(src)%20%7B%20var%20ov%20%3D%20document.createElement(%22div%22)%3B%20ov.style.cssText%20%3D%20%22position%3Afixed%3Binset%3A0%3Bbackground%3Argba(8%2C8%2C12%2C.94)%3Bz-index%3A2147483646%3Bdisplay%3Aflex%3Bflex-direction%3Acolumn%3Balign-items%3Acenter%3Bpadding%3A12px%3Bbox-sizing%3Aborder-box%3Bfont-family%3Asystem-ui%2Csans-serif%22%3B%20var%20stage%20%3D%20document.createElement(%22div%22)%3B%20stage.style.cssText%20%3D%20%22flex%3A1%3Bwidth%3A100%25%3Bmax-width%3A860px%3Bmin-height%3A0%3Bdisplay%3Aflex%3Balign-items%3Acenter%3Bjustify-content%3Acenter%3Boverflow%3Ahidden%22%3B%20var%20im%20%3D%20document.createElement(%22img%22)%3B%20im.src%20%3D%20src%3B%20im.style.cssText%20%3D%20%22max-width%3A100%25%3Bdisplay%3Ablock%22%3B%20stage.appendChild(im)%3B%20ov.appendChild(stage)%3B%20var%20bar%20%3D%20document.createElement(%22div%22)%3B%20bar.style.cssText%20%3D%20%22padding%3A12px%200%202px%3Bdisplay%3Aflex%3Bgap%3A10px%22%3B%20var%20ok%20%3D%20document.createElement(%22button%22)%3B%20ok.textContent%20%3D%20%22%E2%9C%94%20Xong%20%E2%80%94%20m%E1%BB%9F%20%E1%BA%A3nh%20%C4%91%C3%A3%20crop%22%3B%20ok.disabled%20%3D%20true%3B%20ok.style.opacity%20%3D%20%22.5%22%3B%20ok.style.cssText%20%3D%20%22background%3A%234f46e5%3Bcolor%3A%23fff%3Bborder%3A0%3Bborder-radius%3A10px%3Bpadding%3A11px%2018px%3Bfont-size%3A15px%3Bfont-weight%3A600%3Bcursor%3Apointer%22%3B%20var%20cancel%20%3D%20document.createElement(%22button%22)%3B%20cancel.textContent%20%3D%20%22%E2%9C%96%20Hu%E1%BB%B7%22%3B%20cancel.style.cssText%20%3D%20%22background%3A%23374151%3Bcolor%3A%23fff%3Bborder%3A0%3Bborder-radius%3A10px%3Bpadding%3A11px%2018px%3Bfont-size%3A15px%3Bfont-weight%3A600%3Bcursor%3Apointer%22%3B%20bar.appendChild(ok)%3B%20bar.appendChild(cancel)%3B%20ov.appendChild(bar)%3B%20document.body.appendChild(ov)%3B%20var%20cr%20%3D%20null%3B%20function%20init()%20%7B%20cr%20%3D%20new%20Cropper(im%2C%20%7B%20aspectRatio%3A%20NaN%2C%20viewMode%3A%201%2C%20autoCropArea%3A%200.8%2C%20zoomable%3A%20false%2C%20zoomOnWheel%3A%20false%2C%20zoomOnTouch%3A%20false%2C%20movable%3A%20false%2C%20ready%3A%20function%20()%20%7B%20var%20W%20%3D%20im.naturalWidth%2C%20H%20%3D%20im.naturalHeight%2C%20side%20%3D%20Math.round(Math.min(W%2C%20H)%20*%200.8)%3B%20var%20tries%20%3D%200%3B%20(function%20apply()%20%7B%20if%20(cr)%20%7B%20cr.setData(%7B%20x%3A%20Math.round((W%20-%20side)%20%2F%202)%2C%20y%3A%20Math.round((H%20-%20side)%20%2F%202)%2C%20width%3A%20side%2C%20height%3A%20side%20%7D)%3B%20ok.disabled%20%3D%20false%3B%20ok.style.opacity%20%3D%20%221%22%3B%20%7D%20else%20if%20(tries%2B%2B%20%3C%2020)%20setTimeout(apply%2C%20100)%3B%20%7D)()%3B%20%7D%20%7D)%3B%20%7D%20if%20(im.complete%20%26%26%20im.naturalWidth%20%3E%200)%20init()%3B%20else%20im.onload%20%3D%20init%3B%20ok.onclick%20%3D%20function%20()%20%7B%20if%20(!cr)%20return%3B%20var%20d%20%3D%20cr.getData()%3B%20location.href%20%3D%20%22https%3A%2F%2Fwsrv.nl%2F%3Furl%3D%22%20%2B%20encodeURIComponent(src)%20%2B%20%22%26cx%3D%22%20%2B%20Math.max(0%2C%20Math.round(d.x))%20%2B%20%22%26cy%3D%22%20%2B%20Math.max(0%2C%20Math.round(d.y))%20%2B%20%22%26cw%3D%22%20%2B%20Math.round(d.width)%20%2B%20%22%26ch%3D%22%20%2B%20Math.round(d.height)%20%2B%20%22%26precrop%26output%3Djpg%22%3B%20%7D%3B%20cancel.onclick%20%3D%20function%20()%20%7B%20ov.remove()%3B%20window.__wsrvCropOn%20%3D%200%3B%20%7D%3B%20%7D%20if%20(isImgDoc%20%26%26%20imgs.length)%20start(imgs%5B0%5D)%3B%20else%20if%20(imgs.length%20%3D%3D%3D%201)%20start(imgs%5B0%5D)%3B%20else%20if%20(imgs.length%20%3E%201)%20pick()%3B%20else%20alert(%22Trang%20n%C3%A0y%20kh%C3%B4ng%20th%E1%BA%A5y%20%E1%BA%A3nh%20n%C3%A0o.%22)%3B%20%7D)()</textarea>
-    <button onclick="var t=document.getElementById('code');t.select();document.execCommand('copy');this.textContent='✔ Đã copy'">📋 Copy mã</button>
-  </div>
-
-  <p class="note">Lưu ý: một số ít trang web chặn script từ bên ngoài (CSP) thì bookmark không chạy được trên trang đó — mở ảnh ra tab riêng rồi bấm lại thường là được. Nếu vẫn không được thì dùng <a href="app.html">bản trang web</a>.</p>
+  <div class="lbl">URL kết quả</div>
+  <textarea id="out" readonly placeholder="Crop xong URL sẽ hiện ở đây…"></textarea>
+  <button class="copy" id="copy">📋 Copy URL</button>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const urlIn = $("url"), statusEl = $("status"), img = $("img"), out = $("out");
+let cropper = null, source = "", lastLoaded = "";
+
+function cleanUrl(v) {
+  v = (v || "").trim().replace(/^["'`“”‘’]+|["'`“”‘’]+$/g, "").trim();
+  if (v && !/^https?:\/\//i.test(v)) v = "https://" + v;
+  return v;
+}
+function setStatus(t, cls) { statusEl.textContent = t; statusEl.className = cls || ""; }
+
+function updateOut() {
+  if (!cropper || !source) return;
+  const d = cropper.getData();
+  const x = Math.max(0, Math.round(d.x)), y = Math.max(0, Math.round(d.y));
+  const w = Math.round(d.width), h = Math.round(d.height);
+  out.value = "https://wsrv.nl/?url=" + encodeURIComponent(source) +
+    "&cx=" + x + "&cy=" + y + "&cw=" + w + "&ch=" + h + "&precrop" +
+    "&output=" + $("fmt").value;
+}
+
+function load() {
+  const src = cleanUrl(urlIn.value);
+  if (!src) { setStatus("Chưa nhập URL ảnh.", "err"); return; }
+  urlIn.value = src; source = src; lastLoaded = src;
+  if (cropper) { cropper.destroy(); cropper = null; }
+  out.value = "";
+  setStatus("Đang tải ảnh…", "");
+  // Tải qua wsrv.nl để tránh bị CDN gốc (Shopee…) chặn tải trực tiếp từ trình duyệt.
+  let viaProxy = true;
+  img.onload = () => {
+    setStatus("Đã tải ảnh. Kéo khung để crop.", "ok");
+    $("ph").style.display = "none"; img.style.display = "block";
+    cropper = new Cropper(img, {
+      // Khung mở đầu là hình vuông 1:1 ở giữa ảnh, nhưng kéo góc/cạnh thì chỉnh tự do (không khóa tỉ lệ)
+      aspectRatio: NaN,
+      viewMode: 1, autoCropArea: 0.8, responsive: true, background: false,
+      zoomable: false, zoomOnWheel: false, zoomOnTouch: false, movable: false,
+      crop: updateOut,
+      ready: function () {
+        const W = img.naturalWidth, H = img.naturalHeight;
+        const side = Math.round(Math.min(W, H) * 0.8);
+        let tries = 0;
+        (function apply() {
+          if (cropper) {
+            cropper.setData({ x: Math.round((W - side) / 2), y: Math.round((H - side) / 2), width: side, height: side });
+            setTimeout(updateOut, 0);
+          } else if (tries++ < 20) setTimeout(apply, 100);
+        })();
+      }
+    });
+  };
+  img.onerror = () => {
+    if (viaProxy) { viaProxy = false; img.src = src; } // thử lại trực tiếp
+    else setStatus("Không tải được ảnh từ URL này.", "err");
+  };
+  img.src = "https://wsrv.nl/?url=" + encodeURIComponent(src);
+}
+
+$("load").addEventListener("click", load);
+urlIn.addEventListener("keydown", e => { if (e.key === "Enter") load(); });
+$("fmt").addEventListener("change", updateOut);
+// Dán / nhập đúng URL ảnh vào là tự tải luôn, không cần bấm nút
+let autoTimer = null;
+function maybeAutoLoad() {
+  const v = cleanUrl(urlIn.value);
+  if (!v || v === lastLoaded) return;
+  if (!/^https?:\/\/[^\s]+\.[^\s]{2,}/i.test(v)) return;
+  load();
+}
+urlIn.addEventListener("paste", () => setTimeout(maybeAutoLoad, 60));
+urlIn.addEventListener("input", () => { clearTimeout(autoTimer); autoTimer = setTimeout(maybeAutoLoad, 700); });
+$("copy").addEventListener("click", async () => {
+  if (!out.value) return;
+  try { await navigator.clipboard.writeText(out.value); }
+  catch (e) { out.select(); document.execCommand("copy"); }
+  $("copy").textContent = "✔ Đã copy";
+  setTimeout(() => $("copy").textContent = "📋 Copy URL", 1500);
+});
+// Kéo thả URL ảnh vào trang cũng tải được
+document.addEventListener("dragover", e => e.preventDefault());
+document.addEventListener("drop", e => {
+  e.preventDefault();
+  const t = e.dataTransfer.getData("text/uri-list") || e.dataTransfer.getData("text/plain");
+  if (t) { urlIn.value = t.trim().split("\n")[0]; load(); }
+});
+</script>
 </body>
 </html>
